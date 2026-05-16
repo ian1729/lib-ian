@@ -1,8 +1,5 @@
-#include <ian/net.hpp>
-#include <cassert>
-#include <cstdio>
+#include <catch2/catch_test_macros.hpp>
 
-int main() {
-    std::puts("ian::net tests passed");
-    return 0;
-}
+#include <ian/net.hpp>
+
+TEST_CASE("placeholder", "[net]") {}

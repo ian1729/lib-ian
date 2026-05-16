@@ -4,4 +4,4 @@ namespace ian::net {
 
 // TODO: networking utilities
 
-} // namespace ian::net
+}// namespace ian::net

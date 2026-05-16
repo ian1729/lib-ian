@@ -1,0 +1,71 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}"
+    },
+    {
+      "name": "dev",
+      "displayName": "Dev (Debug + clang-tidy)",
+      "description": "Debug build with clang-tidy and warnings as errors",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "IAN_ENABLE_CLANG_TIDY": "ON",
+        "IAN_WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "asan-ubsan",
+      "displayName": "ASan + UBSan",
+      "description": "Debug build with address and undefined behavior sanitizers",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "IAN_ENABLE_SANITIZER_ADDRESS": "ON",
+        "IAN_ENABLE_SANITIZER_UNDEFINED": "ON"
+      }
+    },
+    {
+      "name": "tsan",
+      "displayName": "TSan",
+      "description": "Debug build with thread sanitizer",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "IAN_ENABLE_SANITIZER_THREAD": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release",
+      "description": "Optimized release build",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "dev", "configurePreset": "dev" },
+    { "name": "asan-ubsan", "configurePreset": "asan-ubsan" },
+    { "name": "tsan", "configurePreset": "tsan" },
+    { "name": "release", "configurePreset": "release" }
+  ],
+  "testPresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error", "stopOnFailure": true }
+    },
+    { "name": "dev", "inherits": "base", "configurePreset": "dev" },
+    { "name": "asan-ubsan", "inherits": "base", "configurePreset": "asan-ubsan" },
+    { "name": "tsan", "inherits": "base", "configurePreset": "tsan" },
+    { "name": "release", "inherits": "base", "configurePreset": "release" }
+  ]
+}
