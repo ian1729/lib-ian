@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.29...4.3)
 
 project(
-  ian-lib
+  ian
   VERSION 0.1.0
   LANGUAGES CXX)
 
@@ -23,22 +23,12 @@ if(PROJECT_IS_TOP_LEVEL)
 endif()
 
 include(cmake/CompilerWarnings.cmake)
+include(cmake/ComponentHelpers.cmake)
+include(ian-components.cmake)
 
-add_library(ian_net INTERFACE)
-add_library(ian::net ALIAS ian_net)
-
-target_sources(
-  ian_net
-  PUBLIC FILE_SET
-         HEADERS
-         BASE_DIRS
-         include
-         FILES
-         include/ian/net.hpp)
-
-target_compile_features(ian_net INTERFACE cxx_std_23)
-
-set_target_properties(ian_net PROPERTIES EXPORT_NAME net VERIFY_INTERFACE_HEADER_SETS ${PROJECT_IS_TOP_LEVEL})
+foreach(component IN LISTS ian_components)
+  ian_add_component(${component})
+endforeach()
 
 add_library(ian_warnings INTERFACE)
 ian_set_warnings(ian_warnings ${IAN_WARNINGS_AS_ERRORS})
@@ -50,10 +40,6 @@ if(PROJECT_IS_TOP_LEVEL)
   include(cmake/StaticAnalyzers.cmake)
 
   ian_enable_sanitizers(ian_options)
-
-  if(IAN_ENABLE_CLANG_TIDY)
-    ian_enable_clang_tidy(ian_net ${IAN_WARNINGS_AS_ERRORS})
-  endif()
 endif()
 
 if(IAN_BUILD_TESTS)
@@ -66,48 +52,37 @@ if(IAN_BUILD_TESTS)
   FetchContent_MakeAvailable(Catch2)
   list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 
+  if(PROJECT_IS_TOP_LEVEL AND IAN_ENABLE_CLANG_TIDY)
+    ian_enable_clang_tidy(${IAN_WARNINGS_AS_ERRORS})
+  endif()
+
   enable_testing()
   include(Catch)
 
-  add_executable(ian_net_test test/net.test.cpp)
-  target_link_libraries(
-    ian_net_test
-    PRIVATE ian::net
-            ian_warnings
-            ian_options
-            Catch2::Catch2WithMain)
-  catch_discover_tests(ian_net_test)
+  foreach(component IN LISTS ian_components)
+    add_executable(ian_${component}_test test/${component}.test.cpp)
+    target_link_libraries(
+      ian_${component}_test
+      PRIVATE ian::${component}
+              ian_warnings
+              ian_options
+              Catch2::Catch2WithMain)
+    catch_discover_tests(ian_${component}_test)
+  endforeach()
 endif()
 
 if(IAN_BUILD_APPS)
-  add_executable(ian_net_app app/net.app.cpp)
-  target_link_libraries(ian_net_app PRIVATE ian::net ian_warnings ian_options)
+  foreach(component IN LISTS ian_components)
+    add_executable(ian_${component}_app app/${component}.app.cpp)
+    target_link_libraries(ian_${component}_app PRIVATE ian::${component} ian_warnings ian_options)
+  endforeach()
 endif()
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
   include(CMakePackageConfigHelpers)
   include(GNUInstallDirs)
 
-  install(
-    TARGETS ian_net
-    EXPORT ian_net-targets
-    FILE_SET HEADERS
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-  install(
-    EXPORT ian_net-targets
-    NAMESPACE ian::
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/ian-net/cmake)
-
-  configure_package_config_file(cmake/ian-net-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/ian-net-config.cmake
-                                INSTALL_DESTINATION ${CMAKE_INSTALL_DATADIR}/ian-net/cmake)
-
-  write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/ian-net-config-version.cmake
-    VERSION ${PROJECT_VERSION}
-    COMPATIBILITY SameMajorVersion ARCH_INDEPENDENT)
-
-  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ian-net-config.cmake
-                ${CMAKE_CURRENT_BINARY_DIR}/ian-net-config-version.cmake
-          DESTINATION ${CMAKE_INSTALL_DATADIR}/ian-net/cmake)
+  foreach(component IN LISTS ian_components)
+    ian_install_component(${component})
+  endforeach()
 endif()

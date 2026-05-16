@@ -1,5 +1,13 @@
 function(ian_enable_sanitizers target)
-  if(NOT (CMAKE_CXX_COMPILER_ID MATCHES ".*Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+  if(NOT
+     CMAKE_CXX_COMPILER_ID
+     MATCHES
+     ".*Clang")
+    if(IAN_ENABLE_SANITIZER_ADDRESS
+       OR IAN_ENABLE_SANITIZER_UNDEFINED
+       OR IAN_ENABLE_SANITIZER_THREAD)
+      message(FATAL_ERROR "Sanitizers were requested, but compiler is unsupported: ${CMAKE_CXX_COMPILER_ID}")
+    endif()
     return()
   endif()
 
@@ -10,20 +18,21 @@ function(ian_enable_sanitizers target)
   endif()
 
   if(IAN_ENABLE_SANITIZER_UNDEFINED)
-    list(APPEND sanitizer_list "undefined")
-    if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-      list(
-        APPEND
-        sanitizer_list
-        "implicit-conversion"
-        "nullability"
-        "local-bounds")
-    endif()
+    list(
+      APPEND
+      sanitizer_list
+      "undefined"
+      "implicit-conversion"
+      "nullability"
+      "local-bounds")
   endif()
 
   if(IAN_ENABLE_SANITIZER_THREAD)
     if("address" IN_LIST sanitizer_list)
-      message(WARNING "TSan is incompatible with ASan; skipping thread sanitizer")
+      message(
+        FATAL_ERROR
+          "TSan is incompatible with ASan; enable only one of IAN_ENABLE_SANITIZER_THREAD or IAN_ENABLE_SANITIZER_ADDRESS"
+      )
     else()
       list(APPEND sanitizer_list "thread")
     endif()

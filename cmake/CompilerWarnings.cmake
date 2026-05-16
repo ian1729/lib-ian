@@ -2,7 +2,14 @@
 # Based on: https://github.com/lefticus/cppbestpractices/blob/master/02-Use_the_Tools_Available.md
 
 function(ian_set_warnings target_name warnings_as_errors)
-  set(clang_warnings
+  if(NOT
+     CMAKE_CXX_COMPILER_ID
+     MATCHES
+     ".*Clang")
+    message(FATAL_ERROR "Unsupported C++ compiler for warning configuration: ${CMAKE_CXX_COMPILER_ID}")
+  endif()
+
+  set(warnings
       -Wall
       -Wextra
       -Wshadow
@@ -23,8 +30,8 @@ function(ian_set_warnings target_name warnings_as_errors)
       -Wundef)
 
   if(warnings_as_errors)
-    list(APPEND clang_warnings -Werror)
+    list(APPEND warnings -Werror)
   endif()
 
-  target_compile_options(${target_name} INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${clang_warnings}>)
+  target_compile_options(${target_name} INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${warnings}>)
 endfunction()
