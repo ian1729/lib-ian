@@ -27,7 +27,8 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "IAN_ENABLE_SANITIZER_ADDRESS": "ON",
-        "IAN_ENABLE_SANITIZER_UNDEFINED": "ON"
+        "IAN_ENABLE_SANITIZER_UNDEFINED": "ON",
+        "IAN_WARNINGS_AS_ERRORS": "ON"
       }
     },
     {
@@ -37,7 +38,8 @@
       "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "IAN_ENABLE_SANITIZER_THREAD": "ON"
+        "IAN_ENABLE_SANITIZER_THREAD": "ON",
+        "IAN_WARNINGS_AS_ERRORS": "ON"
       }
     },
     {
@@ -46,7 +48,8 @@
       "description": "Optimized release build",
       "inherits": "base",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+        "CMAKE_BUILD_TYPE": "Release",
+        "IAN_WARNINGS_AS_ERRORS": "ON"
       }
     }
   ],
@@ -61,7 +64,7 @@
       "name": "base",
       "hidden": true,
       "output": { "outputOnFailure": true },
-      "execution": { "noTestsAction": "error", "stopOnFailure": true }
+      "execution": { "noTestsAction": "error" }
     },
     { "name": "dev", "inherits": "base", "configurePreset": "dev" },
     { "name": "asan-ubsan", "inherits": "base", "configurePreset": "asan-ubsan" },

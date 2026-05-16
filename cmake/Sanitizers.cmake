@@ -35,12 +35,13 @@ function(ian_enable_sanitizers target)
     ","
     sanitizer_flags)
   if(sanitizer_flags)
-    target_compile_options(${target} INTERFACE -fsanitize=${sanitizer_flags} -fno-omit-frame-pointer
-                                               -fno-sanitize-recover=all)
-    target_link_options(
+    target_compile_options(
       ${target}
-      INTERFACE
-      -fsanitize=${sanitizer_flags}
-      -fno-omit-frame-pointer)
+      INTERFACE -O1
+                -fno-optimize-sibling-calls
+                -fsanitize=${sanitizer_flags}
+                -fno-omit-frame-pointer
+                -fno-sanitize-recover=all)
+    target_link_options(${target} INTERFACE -fsanitize=${sanitizer_flags})
   endif()
 endfunction()
