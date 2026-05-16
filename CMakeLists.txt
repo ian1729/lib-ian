@@ -38,7 +38,7 @@ target_sources(
 
 target_compile_features(ian_net INTERFACE cxx_std_23)
 
-set_target_properties(ian_net PROPERTIES VERIFY_INTERFACE_HEADER_SETS ${PROJECT_IS_TOP_LEVEL})
+set_target_properties(ian_net PROPERTIES EXPORT_NAME net VERIFY_INTERFACE_HEADER_SETS ${PROJECT_IS_TOP_LEVEL})
 
 add_library(ian_warnings INTERFACE)
 ian_set_warnings(ian_warnings ${IAN_WARNINGS_AS_ERRORS})
