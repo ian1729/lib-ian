@@ -7,10 +7,15 @@ Checks: "*,
         -google-*,
         -llvm*,
         -modernize-use-trailing-return-type,
+        -portability-avoid-pragma-once,
         -zircon-*,
         -readability-else-after-return,
         -readability-static-accessed-through-instance,
         -readability-avoid-const-params-in-decls,
+        -readability-identifier-length,
+        -readability-identifier-naming,
+        -readability-magic-numbers,
+        -cppcoreguidelines-avoid-magic-numbers,
         -cppcoreguidelines-non-private-member-variables-in-classes,
         -misc-non-private-member-variables-in-classes,
         -misc-no-recursion,
@@ -22,12 +27,7 @@ HeaderFilterRegex: 'include/ian/.*\.hpp$'
 FormatStyle:     none
 
 CheckOptions:
-  - key: readability-identifier-length.IgnoredVariableNames
-    value: 'x|y|z'
-  - key: readability-identifier-length.IgnoredParameterNames
-    value: 'x|y|z'
-
-
-
-
-
+  - key: misc-include-cleaner.MissingIncludes
+    value: false
+  - key: misc-include-cleaner.UnusedIncludes
+    value: true
