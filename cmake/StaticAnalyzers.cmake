@@ -27,7 +27,7 @@ function(ian_enable_clang_tidy warnings_as_errors)
     endif()
   endif()
 
-  if(${warnings_as_errors})
+  if(warnings_as_errors)
     list(APPEND clang_tidy_cmd -warnings-as-errors=*)
   endif()
 
