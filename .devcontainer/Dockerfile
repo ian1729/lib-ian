@@ -19,6 +19,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         clang-format \
         lld \
         lldb \
+        curl \
+        ca-certificates \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 \
     && update-alternatives --set cc /usr/bin/clang \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100 \
@@ -39,7 +41,6 @@ RUN uv pip install --system --break-system-packages cmake-format
 # Install nvm + latest LTS Node for the vscode user
 USER vscode
 ENV NVM_DIR=/home/vscode/.nvm
-ENV NODE_VERSION=lts/*
 
 RUN mkdir -p $NVM_DIR \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash \
