@@ -5,6 +5,13 @@ project(
   VERSION 0.1.0
   LANGUAGES CXX)
 
+if(NOT
+   CMAKE_CXX_COMPILER_ID
+   MATCHES
+   ".*Clang")
+  message(FATAL_ERROR "Only Clang is supported. Detected compiler: ${CMAKE_CXX_COMPILER_ID}")
+endif()
+
 if(PROJECT_IS_TOP_LEVEL)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
   set(CMAKE_CXX_EXTENSIONS OFF)
@@ -80,7 +87,13 @@ endif()
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
   include(CMakePackageConfigHelpers)
-  include(GNUInstallDirs)
+
+  if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR)
+    set(CMAKE_INSTALL_INCLUDEDIR "include")
+  endif()
+  if(NOT DEFINED CMAKE_INSTALL_DATADIR)
+    set(CMAKE_INSTALL_DATADIR "share")
+  endif()
 
   foreach(component IN LISTS ian_components)
     ian_install_component(${component})

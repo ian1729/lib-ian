@@ -1,4 +1,4 @@
-# Compiler warning configuration for Clang.
+# Compiler warning configuration.
 # Based on: https://github.com/lefticus/cppbestpractices/blob/master/02-Use_the_Tools_Available.md
 
 function(ian_set_warnings target_name warnings_as_errors)
@@ -6,7 +6,7 @@ function(ian_set_warnings target_name warnings_as_errors)
      CMAKE_CXX_COMPILER_ID
      MATCHES
      ".*Clang")
-    message(FATAL_ERROR "Unsupported C++ compiler for warning configuration: ${CMAKE_CXX_COMPILER_ID}")
+    message(FATAL_ERROR "Only Clang is supported. Detected compiler: ${CMAKE_CXX_COMPILER_ID}")
   endif()
 
   set(warnings
