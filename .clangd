@@ -1,0 +1,13 @@
+CompileFlags:
+  Add:
+    - -stdlib=libc++
+    - -std=c++23
+
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict
+
+InlayHints:
+  Enabled: true
+  ParameterNames: true
+  DeducedTypes: true

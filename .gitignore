@@ -18,15 +18,15 @@ CMakeUserPresets.json
 # Project-specific
 internal/
 .cache/
+.local/
+*.reference.md
 
 # IDE files
 .vs/
 .idea/
 .vscode/
-!.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
-!.vscode/extensions.json
 _ReSharper*/
 *.bak
 *.swp
