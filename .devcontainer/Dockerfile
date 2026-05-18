@@ -10,7 +10,6 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
     fi \
     && rm -f /tmp/reinstall-cmake.sh
 
-# Install C/C++ toolchain: clang, clang-tidy, clang-format, lld, lldb, ninja
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
         ninja-build \
@@ -19,6 +18,15 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         clang-format \
         lld \
         lldb \
+        libc++-18-dev \
+        libc++abi-18-dev \
+        libclang-rt-18-dev \
+        clangd-18 \
+        llvm-18 \
+        binutils-dev \
+        libdw-dev \
+        libdwarf-dev \
+        libelf-dev \
         curl \
         ca-certificates \
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 \
@@ -27,18 +35,23 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && update-alternatives --set c++ /usr/bin/clang++ \
     && update-alternatives --install /usr/bin/ld ld /usr/bin/ld.lld 100 \
     && update-alternatives --set ld /usr/bin/ld.lld \
+    && update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-18 100 \
+    && update-alternatives --set clangd /usr/bin/clangd-18 \
+    && update-alternatives --install /usr/bin/llvm-symbolizer llvm-symbolizer /usr/bin/llvm-symbolizer-18 100 \
+    && update-alternatives --set llvm-symbolizer /usr/bin/llvm-symbolizer-18 \
+    && update-alternatives --install /usr/bin/llvm-cov llvm-cov /usr/bin/llvm-cov-18 100 \
+    && update-alternatives --set llvm-cov /usr/bin/llvm-cov-18 \
+    && update-alternatives --install /usr/bin/llvm-profdata llvm-profdata /usr/bin/llvm-profdata-18 100 \
+    && update-alternatives --set llvm-profdata /usr/bin/llvm-profdata-18 \
     && rm -rf /var/lib/apt/lists/*
 
 ENV CC=clang
 ENV CXX=clang++
 
-# Install uv (Python package manager)
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# Install cmake-format via uv (system-wide)
 RUN uv pip install --system --break-system-packages cmake-format
 
-# Install nvm + latest LTS Node for the vscode user
 USER vscode
 ENV NVM_DIR=/home/vscode/.nvm
 
@@ -49,7 +62,6 @@ RUN mkdir -p $NVM_DIR \
     && nvm alias default 'lts/*' \
     && nvm use default
 
-# Ensure nvm is loaded in interactive shells
 RUN echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc \
     && echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.bashrc \
     && echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> ~/.bashrc

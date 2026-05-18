@@ -10,24 +10,24 @@
     },
     {
       "name": "dev",
-      "displayName": "Dev (Debug + clang-tidy)",
-      "description": "Debug build with clang-tidy and warnings as errors",
+      "displayName": "Dev",
+      "description": "Fast debug build for local iteration",
       "inherits": "base",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "IAN_ENABLE_CLANG_TIDY": "ON",
-        "IAN_WARNINGS_AS_ERRORS": "ON"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
-      "name": "asan-ubsan",
-      "displayName": "ASan + UBSan",
-      "description": "Debug build with address and undefined behavior sanitizers",
+      "name": "check",
+      "displayName": "Check",
+      "description": "Pre-push quality gate: sanitizers, coverage, clang-tidy, warnings as errors",
       "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "IAN_ENABLE_SANITIZER_ADDRESS": "ON",
         "IAN_ENABLE_SANITIZER_UNDEFINED": "ON",
+        "IAN_ENABLE_COVERAGE": "ON",
+        "IAN_ENABLE_CLANG_TIDY": "ON",
         "IAN_WARNINGS_AS_ERRORS": "ON"
       }
     },
@@ -55,7 +55,7 @@
   ],
   "buildPresets": [
     { "name": "dev", "configurePreset": "dev" },
-    { "name": "asan-ubsan", "configurePreset": "asan-ubsan" },
+    { "name": "check", "configurePreset": "check" },
     { "name": "tsan", "configurePreset": "tsan" },
     { "name": "release", "configurePreset": "release" }
   ],
@@ -64,10 +64,22 @@
       "name": "base",
       "hidden": true,
       "output": { "outputOnFailure": true },
-      "execution": { "noTestsAction": "error" }
+      "execution": { "noTestsAction": "error" },
+      "environment": {
+        "ASAN_SYMBOLIZER_PATH": "/usr/bin/llvm-symbolizer",
+        "UBSAN_SYMBOLIZER_PATH": "/usr/bin/llvm-symbolizer",
+        "TSAN_SYMBOLIZER_PATH": "/usr/bin/llvm-symbolizer"
+      }
     },
     { "name": "dev", "inherits": "base", "configurePreset": "dev" },
-    { "name": "asan-ubsan", "inherits": "base", "configurePreset": "asan-ubsan" },
+    {
+      "name": "check",
+      "inherits": "base",
+      "configurePreset": "check",
+      "environment": {
+        "LLVM_PROFILE_FILE": "${sourceDir}/build/check/profiles/%p.profraw"
+      }
+    },
     { "name": "tsan", "inherits": "base", "configurePreset": "tsan" },
     { "name": "release", "inherits": "base", "configurePreset": "release" }
   ]

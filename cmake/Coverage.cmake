@@ -1,0 +1,7 @@
+function(ian_enable_coverage target)
+    if(NOT IAN_ENABLE_COVERAGE)
+        return()
+    endif()
+    target_compile_options(${target} INTERFACE -fprofile-instr-generate -fcoverage-mapping)
+    target_link_options(${target} INTERFACE -fprofile-instr-generate)
+endfunction()
