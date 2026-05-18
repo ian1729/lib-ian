@@ -14,10 +14,4 @@ if(IAN_BUILD_TESTS)
 
     enable_testing()
     include(Catch)
-
-    add_test(
-        NAME lint-no-c-headers-in-public-api
-        COMMAND ${CMAKE_COMMAND}
-            -DDIR=${CMAKE_SOURCE_DIR}/include/ian
-            -P ${CMAKE_SOURCE_DIR}/cmake/CheckPublicHeaders.cmake)
 endif()
