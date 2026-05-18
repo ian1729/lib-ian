@@ -1,11 +1,9 @@
 file(GLOB headers "${DIR}/*.hpp")
 
-# C function-wrapper headers that belong in detail/, not in public API.
-# Type-only headers (<cstddef>, <cstdint>, <climits>) are allowed.
 set(banned_c_compat
     "<cstdio>" "<cstdlib>" "<cstring>" "<cmath>" "<cassert>"
     "<cctype>" "<ctime>" "<cerrno>" "<csignal>" "<csetjmp>"
-    "<clocale>" "<cwchar>" "<cwctype>")
+    "<clocale>" "<cwchar>" "<cwctype>" "<cstddef>" "<cstdint>" "<climits>")
 
 foreach(header IN LISTS headers)
     file(READ "${header}" content)
