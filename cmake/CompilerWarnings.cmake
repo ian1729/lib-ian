@@ -6,7 +6,9 @@ function(ian_set_warnings target_name warnings_as_errors)
      CMAKE_CXX_COMPILER_ID
      MATCHES
      ".*Clang")
-    message(FATAL_ERROR "Only Clang is supported. Detected compiler: ${CMAKE_CXX_COMPILER_ID}")
+    message(
+      FATAL_ERROR
+        "Only Clang is supported. Detected compiler: ${CMAKE_CXX_COMPILER_ID}")
   endif()
 
   set(warnings
@@ -33,5 +35,6 @@ function(ian_set_warnings target_name warnings_as_errors)
     list(APPEND warnings -Werror)
   endif()
 
-  target_compile_options(${target_name} INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${warnings}>)
+  target_compile_options(${target_name}
+                         INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${warnings}>)
 endfunction()

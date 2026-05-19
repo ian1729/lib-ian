@@ -57,7 +57,17 @@
     { "name": "dev", "configurePreset": "dev" },
     { "name": "check", "configurePreset": "check" },
     { "name": "tsan", "configurePreset": "tsan" },
-    { "name": "release", "configurePreset": "release" }
+    { "name": "release", "configurePreset": "release" },
+    {
+      "name": "format",
+      "configurePreset": "dev",
+      "targets": ["format"]
+    },
+    {
+      "name": "format-check",
+      "configurePreset": "dev",
+      "targets": ["format-check"]
+    }
   ],
   "testPresets": [
     {
@@ -82,5 +92,47 @@
     },
     { "name": "tsan", "inherits": "base", "configurePreset": "tsan" },
     { "name": "release", "inherits": "base", "configurePreset": "release" }
+  ],
+  "workflowPresets": [
+    {
+      "name": "dev",
+      "displayName": "Dev workflow",
+      "description": "Configure, build, and test the dev preset",
+      "steps": [
+        { "type": "configure", "name": "dev" },
+        { "type": "build", "name": "dev" },
+        { "type": "test", "name": "dev" }
+      ]
+    },
+    {
+      "name": "check",
+      "displayName": "Check workflow",
+      "description": "Configure, build, and test the check preset",
+      "steps": [
+        { "type": "configure", "name": "check" },
+        { "type": "build", "name": "check" },
+        { "type": "test", "name": "check" }
+      ]
+    },
+    {
+      "name": "tsan",
+      "displayName": "TSan workflow",
+      "description": "Configure, build, and test the tsan preset",
+      "steps": [
+        { "type": "configure", "name": "tsan" },
+        { "type": "build", "name": "tsan" },
+        { "type": "test", "name": "tsan" }
+      ]
+    },
+    {
+      "name": "release",
+      "displayName": "Release workflow",
+      "description": "Configure, build, and test the release preset",
+      "steps": [
+        { "type": "configure", "name": "release" },
+        { "type": "build", "name": "release" },
+        { "type": "test", "name": "release" }
+      ]
+    }
   ]
 }

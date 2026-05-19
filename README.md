@@ -20,30 +20,65 @@ My personal C++ libs.
 
 ## Workflow
 
+Workflow presets run configure, build, and test in one command:
+
 ```sh
-# Configure + build (fast debug, clangd source)
-cmake --preset dev && cmake --build --preset dev
+# Fast debug build for local iteration
+cmake --workflow --preset dev
 
-# Run tests
-ctest --preset dev
-
-# Pre-push quality gate
-cmake --preset check && cmake --build --preset check && ctest --preset check
+# Pre-push quality gate: sanitizers, coverage, clang-tidy, warnings as errors
+cmake --workflow --preset check
 
 # Thread sanitizer
-cmake --preset tsan && cmake --build --preset tsan && ctest --preset tsan
+cmake --workflow --preset tsan
 
-# Release
-cmake --preset release && cmake --build --preset release
+# Optimized release build
+cmake --workflow --preset release
 ```
+
+Individual presets are also available when a single step is needed:
+
+```sh
+# Configure
+cmake --preset dev
+cmake --preset check
+cmake --preset tsan
+cmake --preset release
+
+# Build
+cmake --build --preset dev
+cmake --build --preset check
+cmake --build --preset tsan
+cmake --build --preset release
+
+# Format
+cmake --build --preset format
+cmake --build --preset format-check
+
+# Test
+ctest --preset dev
+ctest --preset check
+ctest --preset tsan
+ctest --preset release
+```
+
+Available presets can be listed with:
+
+```sh
+cmake --list-presets
+cmake --list-presets=workflow
+```
+
+Before calling work complete, run the check workflow, format the touched files,
+then run the check workflow again. The first check proves the change works
+before formatting; the second check proves formatting did not change behavior.
 
 ## Current Status
 
-Building out networking libraries by following Beej's Guide to Network
-I'm going through <https://beej.us/guide/bgnet/html/>.
+Building out networking libraries by following Beej's Guide to Network.
 
 ## TODO
 
-[] Explore raw IPs in an app (ch 3 structs, ch 5 socket C)
-[] Explore hostname resolution in an app (ch 5, ch 7)
-[] Explore send + recv in an app (full HTTP exchange ch 7)
+[] Explore `socket()` creation in an app (ch 5 socket C)
+[] Explore `getaddrinfo()` in an app (ch 5, ch 7)
+[] Explore `send()` + `recv()` in an app (full HTTP exchange ch 7)

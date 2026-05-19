@@ -6,7 +6,10 @@ function(ian_enable_sanitizers target)
     if(IAN_ENABLE_SANITIZER_ADDRESS
        OR IAN_ENABLE_SANITIZER_UNDEFINED
        OR IAN_ENABLE_SANITIZER_THREAD)
-      message(FATAL_ERROR "Sanitizers were requested, but compiler is unsupported: ${CMAKE_CXX_COMPILER_ID}")
+      message(
+        FATAL_ERROR
+          "Sanitizers were requested, but compiler is unsupported: ${CMAKE_CXX_COMPILER_ID}"
+      )
     endif()
     return()
   endif()

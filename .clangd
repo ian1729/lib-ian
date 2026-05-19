@@ -4,6 +4,8 @@ CompileFlags:
     - -std=c++23
 
 Diagnostics:
+  ClangTidy:
+    FastCheckFilter: None
   UnusedIncludes: Strict
   MissingIncludes: Strict
 
