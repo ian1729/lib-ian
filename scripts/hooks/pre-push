@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cmake --workflow --preset check & p1=$!
+cmake --workflow --preset tsan & p2=$!
+
+fail=0
+wait "$p1" || fail=1
+wait "$p2" || fail=1
+
+exit $fail

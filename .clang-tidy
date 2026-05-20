@@ -5,7 +5,9 @@ Checks: "*,
         -android-*,
         -fuchsia-*,
         -llvmlibc-*,
+        -llvm-header-guard,
         -modernize-use-trailing-return-type,
+        -readability-identifier-length,
         -zircon-*,
 "
 WarningsAsErrors: ''

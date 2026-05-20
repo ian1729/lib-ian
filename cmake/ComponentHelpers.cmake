@@ -26,6 +26,16 @@ function(ian_define_component_impl name)
   target_link_libraries(ian_${name} INTERFACE dbg_macro
                                               spdlog::spdlog_header_only)
 
+  set(_pch
+      <dbg.h>
+      <spdlog/spdlog.h>
+      <string>
+      <vector>
+      <memory>
+      <sys/socket.h>
+      <netinet/in.h>
+      <netdb.h>)
+
   if(IAN_BUILD_TESTS)
     add_executable(ian_${name}_test test/${name}.test.cpp)
     target_sources(ian_${name}_test PRIVATE ${BACKWARD_ENABLE})
@@ -38,6 +48,11 @@ function(ian_define_component_impl name)
     add_backward(ian_${name}_test)
     target_include_directories(ian_${name}_test SYSTEM
                                PRIVATE ${backward_SOURCE_DIR})
+    target_precompile_headers(
+      ian_${name}_test
+      PRIVATE
+      ${_pch}
+      <catch2/catch_test_macros.hpp>)
     catch_discover_tests(ian_${name}_test)
   endif()
 
@@ -49,6 +64,7 @@ function(ian_define_component_impl name)
     add_backward(ian_${name}_app)
     target_include_directories(ian_${name}_app SYSTEM
                                PRIVATE ${backward_SOURCE_DIR})
+    target_precompile_headers(ian_${name}_app PRIVATE ${_pch})
   endif()
 
   if(IAN_ENABLE_INSTALL)

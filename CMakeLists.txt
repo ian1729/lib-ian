@@ -36,6 +36,14 @@ file(
   CMakeLists.txt
   cmake/*.cmake)
 
+if(CMAKE_EXPORT_COMPILE_COMMANDS AND PROJECT_IS_TOP_LEVEL)
+  execute_process(
+    COMMAND
+      ${CMAKE_COMMAND} -E create_symlink
+      ${CMAKE_BINARY_DIR}/compile_commands.json
+      ${CMAKE_SOURCE_DIR}/compile_commands.json)
+endif()
+
 include(cmake/Deps.cmake)
 include(cmake/InstallSetup.cmake)
 include(cmake/CompilerWarnings.cmake)

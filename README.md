@@ -69,9 +69,6 @@ cmake --list-presets
 cmake --list-presets=workflow
 ```
 
-Before calling work complete, run the check workflow, format the touched files,
-then run the check workflow again. The first check proves the change works
-before formatting; the second check proves formatting did not change behavior.
 
 ## Current Status
 
