@@ -1,5 +1,3 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/cpp
 {
 	"name": "C++",
 	"build": {
@@ -12,20 +10,30 @@
 			"version": "latest",
 			"dockerDashComposeVersion": "latest"
 		}
-	}
-
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "gcc -v",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	},
+	"runArgs": [
+		"--dns=1.1.1.1",
+		"--dns=8.8.8.8",
+		"--restart=unless-stopped"
+	],
+	"mounts": [
+		"source=lib-ian-build,target=${containerWorkspaceFolder}/build,type=volume",
+		"source=lib-ian-out,target=${containerWorkspaceFolder}/out,type=volume",
+		"source=lib-ian-cache,target=${containerWorkspaceFolder}/.cache,type=volume"
+	],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"llvm-vs-code-extensions.vscode-clangd"
+			],
+			"settings": {
+				"C_Cpp.intelliSenseEngine": "disabled",
+				"clangd.arguments": [
+					"--background-index",
+					"--clang-tidy"
+				]
+			}
+		}
+	},
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y --no-install-recommends xdg-utils ca-certificates && [ -f .local/postcreate.sh ] && bash .local/postcreate.sh || true"
 }
